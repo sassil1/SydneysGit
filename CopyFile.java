@@ -32,6 +32,8 @@ public class CopyFile {
         } else {
             System.out.println("head file already exists");
         }
+        System.out.println("git repository created");
+
 
     }
 }

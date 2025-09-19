@@ -1,1 +1,2 @@
 # SydneysGit
+In the Copy File class, the initialize method creates the git repository and adds the objects folder, HEAD file, and index file into the repo, all within the folder beign worked in. In the tester I initialize a CopyFile object and called initialize() on it.
