@@ -25,6 +25,13 @@ public class CopyFile {
         } else {
             System.out.println("index file already exists");
         }
+        File head = new File("./git/HEAD");
+        if (!head.exists()) {
+            head.createNewFile();
+            System.out.println("Created head file!");
+        } else {
+            System.out.println("head file already exists");
+        }
 
     }
 }
