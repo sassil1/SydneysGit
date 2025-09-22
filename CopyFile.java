@@ -1,8 +1,17 @@
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class CopyFile {
 
+    // Initializes Git repo, adds objects folder, index file, and heaad file
     public void initializerepo() throws IOException {
         File git = new File("./git");
         if (!git.exists()) {
@@ -33,7 +42,32 @@ public class CopyFile {
             System.out.println("head file already exists");
         }
         System.out.println("git repository created");
+    }
 
+    public String genSha1(File f) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader("file.txt"));
+        StringBuilder sb = new StringBuilder();
+        String line = br.readLine();
 
+        while (line != null) {
+            sb.append(line);
+            sb.append(System.lineSeparator());
+            line = br.readLine();
+        }
+        String fileData = sb.toString();
+        br.close();
+
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
+            messageDigest.update(fileData.getBytes());
+            byte[] hashedData = messageDigest.digest();
+            
+            BigInteger bigInteger = new BigInteger(1, hashedData);
+            String hashedText = bigInteger.toString(16);
+            return hashedText;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
