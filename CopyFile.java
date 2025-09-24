@@ -45,7 +45,7 @@ public class CopyFile {
     }
 
     public String genSha1(File f) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader("file.txt"));
+        BufferedReader br = new BufferedReader(new FileReader(f));
         StringBuilder sb = new StringBuilder();
         String line = br.readLine();
 

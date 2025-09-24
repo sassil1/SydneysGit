@@ -1,6 +1,8 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class CopyFileTester {
 
@@ -52,6 +54,16 @@ public class CopyFileTester {
         verifyInit();
         File git = new File("./git");
         cleanUp(git);
+
+        File f = new File("output.txt");
+        if (!f.exists()) {
+            f.createNewFile();
+        }
+        String data = "This is some text to write to the file.";
+        Path file = Path.of("output.txt");
+        Files.writeString(file, data);
+
+        System.out.println(gitproj.genSha1(f));
 
     }
 
