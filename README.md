@@ -1,4 +1,8 @@
 # SydneysGit
-In the Copy File class, the initialize method creates the git repository and adds the objects folder, HEAD file, and index file into the repo, all within the folder beign worked in. 
-In the tester I initialize a CopyFile object and called initialize() on it.
-To test that everything is running correctly, first call the initialize method, then the verifyInit() method, and finally the cleanUp() method. After, call just the verifyInit() method and neither of the others, to confirm that the method correctly identifies if the files do not exist. The responses in the terminal should make it clear if things ran properly.
+In the Copy File class, the initializerepo method creates the git repository and adds the objects folder, HEAD file, and index file into the repo, all within the folder beign worked in. 
+The genSha1 method takes in a file and returns sha1 hash based on the file contents in a string
+The storeFile method takes in a file and inputs its  sha1 hash into objects as a file and the sha1 along with the original file name into the index file
+
+In the tester I initialize a CopyFile object, and a random file called output.txt. I call initializerepo(), then run verifyInit which is a method in the tester that confirms through printed comments that the initialization worked. Then I make sure my genSha1 method works alone, then run the storeFile method. Then I delete the output.txt file and the entire git folder with a method called cleanUp that is also written in the tester.
+
+To test that everything is running correctly, follow the comments on the tester. The terminal messages should make it clear if things ran properly
