@@ -3,12 +3,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.lang.System.Logger;
-import java.lang.System.Logger.Level;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -79,8 +78,11 @@ public class CopyFile {
         File blob = new File("./git/objects/" + sha1);
         if (!blob.exists()) {
             blob.createNewFile();
-            // TO-DO am i supposed to fill with og file contents? + what was the warning
-            // about edge cases...
+            Path sourcePath = Paths.get("./" + f); // Replace with your source file path
+            Path destinationPath = Paths.get(blob + ""); // Replace with your desired new file path
+                // Copy the file, replacing if the destination exists
+                Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+
             System.out.println("Added new blob file to objects!");
         } else {
             System.out.println("New blob file was not added to objects");
