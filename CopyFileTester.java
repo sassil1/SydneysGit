@@ -51,10 +51,7 @@ public class CopyFileTester {
 
         gitproj.initializerepo();
 
-        verifyInit();
-        File git = new File("./git");
-        cleanUp(git);
-
+        //Create and fills file for practicing with sha1 later
         File f = new File("output.txt");
         if (!f.exists()) {
             f.createNewFile();
@@ -62,8 +59,22 @@ public class CopyFileTester {
         String data = "This is some text to write to the file.";
         Path file = Path.of("output.txt");
         Files.writeString(file, data);
+       
+        //Verifies repo initialization
+        verifyInit();
 
+        //Makes sure Sha1 blob is created properly from random file
         System.out.println(gitproj.genSha1(f));
+        
+        //Takes a file, turns it into a sha1 blob, stores it in index and creates a file in objects with the sha1 hash as its name
+        gitproj.storeFile(f);
+       
+        //Next 3 lines delete the folder and output file (Comment out for testing the above, then uncomment and run before testing again)
+        File git = new File("./git");
+        cleanUp(git);
+        f.delete();
+
+
 
     }
 

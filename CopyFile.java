@@ -6,6 +6,8 @@ import java.io.UnsupportedEncodingException;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -61,7 +63,7 @@ public class CopyFile {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
             messageDigest.update(fileData.getBytes());
             byte[] hashedData = messageDigest.digest();
-            
+
             BigInteger bigInteger = new BigInteger(1, hashedData);
             String hashedText = bigInteger.toString(16);
             return hashedText;
@@ -69,5 +71,21 @@ public class CopyFile {
             e.printStackTrace();
         }
         return null;
+    }
+    
+    public void storeFile(File f) throws IOException {
+        String sha1 = genSha1(f);
+        String data = sha1 + " " + f.getName();
+        Path file = Path.of("./git/index");
+        Files.writeString(file, data);
+        System.out.println("File data and name stored in index");
+
+        File blob = new File("./git/objects/" + sha1);
+        if (!blob.exists()) {
+            blob.createNewFile();
+            System.out.println("Added new blob file to objects!");
+        } else {
+            System.out.println("New blob file was not added to objects");
+        }
     }
 }
