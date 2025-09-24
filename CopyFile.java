@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.System.Logger;
@@ -72,20 +73,36 @@ public class CopyFile {
         }
         return null;
     }
-    
-    public void storeFile(File f) throws IOException {
-        String sha1 = genSha1(f);
-        String data = sha1 + " " + f.getName();
-        Path file = Path.of("./git/index");
-        Files.writeString(file, data);
-        System.out.println("File data and name stored in index");
 
+    public void storeFileObj(File f) throws IOException {
+        String sha1 = genSha1(f);
         File blob = new File("./git/objects/" + sha1);
         if (!blob.exists()) {
             blob.createNewFile();
+            // TO-DO am i supposed to fill with og file contents? + what was the warning
+            // about edge cases...
             System.out.println("Added new blob file to objects!");
         } else {
             System.out.println("New blob file was not added to objects");
         }
+    }
+
+    public void storeFileInd(File f) throws IOException {
+        String sha1 = genSha1(f);
+        String data = "";
+        File index = new File("./git/index");
+        if (!index.exists()) {
+            index.createNewFile();
+        }
+        if (index.length() == 0) {
+            data = sha1 + " " + f.getName();
+        } else {
+            data = "\n" + sha1 + " " + f.getName();
+        }
+        String filePath = "./git/index";
+        FileWriter writer = new FileWriter(filePath, true);
+        writer.write(data);
+        writer.close();
+        System.out.println("File data and name stored in index");
     }
 }
