@@ -45,15 +45,18 @@ public class CopyFileTester {
         }
     }
 
-    public static boolean isBlobInObjects(File f) {
-        String directoryPath = "./git/objects/"; // Replace with your actual folder path
+    public static boolean isBlobInObjects(File f, boolean compression) throws NoSuchAlgorithmException, IOException {
+        CopyFile gitproj = new CopyFile();
+        String directoryPath = "./git/objects"; 
         File folder = new File(directoryPath);
         if (folder.exists() && folder.isDirectory()) {
             File[] files = folder.listFiles();
             if (files != null) {
-                for (File file : files) {
-                    System.out.println("File: " + file.getName());
-                    return true;
+                for (int i = 0; i < files.length; i++) {
+                    if ((files[i].getName()).equals(gitproj.genSha1(f, compression))) {
+                        System.out.println("File: " + gitproj.genSha1(f, compression));
+                        return true;
+                    }
                 }
             }
         }
@@ -65,6 +68,9 @@ public class CopyFileTester {
         // initializing CopyFile Obj
         CopyFile gitproj = new CopyFile();
         gitproj.initializerepo();
+
+        //For Compression - to turn off compression, just set c = false
+        boolean c = true;
 
         //Create and fills files for practicing with sha1 later
         File f = new File("output");
@@ -79,7 +85,7 @@ public class CopyFileTester {
         if (!g.exists()) {
             g.createNewFile();
         }
-        String data2 = "This is some more text to write to the file.";
+        String data2 = "My name is Sydney";
         Path file2 = Path.of("output2");
         Files.writeString(file2, data2);
 
@@ -87,39 +93,42 @@ public class CopyFileTester {
         if (!h.exists()) {
             h.createNewFile();
         }
-        String data3 = "This is even more text to write to the file.";
+        String data3 = "I'm 18 years old and i love dogs";
         Path file3 = Path.of("output3");
         Files.writeString(file3, data3);
 
-        File i = gitproj.zipCompress(f);
-
-        // // Verifies repo initialization
+        // Verifies repo initialization
         verifyInit();
 
         // Makes sure Sha1 blob is created properly from random file
-        System.out.println(gitproj.genSha1(f));
+        System.out.println(gitproj.genSha1(f, c));
 
-        // Takes 3 files, turns it into a sha1 blob, stores it in index and creates a
-        // file in objects with the sha1 hash as its name
-        gitproj.storeFileObj(f);
-        gitproj.storeFileObj(g);
-        gitproj.storeFileObj(h);
-        gitproj.storeFileInd(f);
-        gitproj.storeFileInd(g);
-        gitproj.storeFileInd(h);
+        // Takes 3 files, turns into sha1 blobs, stores in index and creates files in objects with the sha1 hash as their names
+        gitproj.storeFileObj(f,c);
+        gitproj.storeFileObj(g,c);
+        gitproj.storeFileObj(h,c);
+        gitproj.storeFileInd(f,c);
+        gitproj.storeFileInd(g,c);
+        gitproj.storeFileInd(h,c);
 
         //Making sure blobs are in objects (Stretch Goal 2.3.1)
-        System.out.println(isBlobInObjects(f));
-        System.out.println(isBlobInObjects(g));
-        System.out.println(isBlobInObjects(h));
+        System.out.println(isBlobInObjects(f,c));
+        System.out.println(isBlobInObjects(g,c));
+        System.out.println(isBlobInObjects(h,c));
 
         // Reseting (Stretch Goal 2.3.1) (Comment out for testing the above, then
         // uncomment and run before testing again)
         File git = new File("./git");
         cleanUp(git);
+        File i = gitproj.zipCompress(f);
+        File j = gitproj.zipCompress(g);
+        File k = gitproj.zipCompress(h);
+        i.delete();
+        j.delete();
+        k.delete();
         f.delete();
         g.delete();
         h.delete();
-        //i.delete();
+
     }
 }

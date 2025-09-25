@@ -140,9 +140,15 @@ public class CopyFile {
     }
     
     
-    public String genSha1(File f) throws NoSuchAlgorithmException, IOException {
+    public String genSha1(File f, boolean compression) throws NoSuchAlgorithmException, IOException {
+        File f1;
+        if (compression) {
+            f1 = zipCompress(f);
+        } else {
+            f1 = f;
+        }
 
-        String content = new String(Files.readAllBytes(Paths.get(f + "")));
+        String content = new String(Files.readAllBytes(Paths.get(f1 + "")));
 
         // Get an instance of the MessageDigest for SHA-1
         MessageDigest md = MessageDigest.getInstance("SHA-1");
@@ -167,12 +173,16 @@ public class CopyFile {
         return hexString;
     }
 
-    public void storeFileObj(File f) throws IOException, NoSuchAlgorithmException {
-        String sha1 = genSha1(f);
+    public void storeFileObj(File f, boolean compression) throws IOException, NoSuchAlgorithmException {
+        String sha1 = genSha1(f, compression);
+        File f1 = f;
+        if (compression) {
+            f1 = zipCompress(f);
+        } 
         File blob = new File("./git/objects/" + sha1);
         if (!blob.exists()) {
             blob.createNewFile();
-            Path sourcePath = Paths.get("./" + f); // Replace with your source file path
+            Path sourcePath = Paths.get("./" + f1); // Replace with your source file path
             Path destinationPath = Paths.get(blob + ""); // Replace with your desired new file path
             // Copy the file, replacing if the destination exists
             Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
@@ -183,8 +193,8 @@ public class CopyFile {
         }
     }
 
-    public void storeFileInd(File f) throws IOException, NoSuchAlgorithmException {
-        String sha1 = genSha1(f);
+    public void storeFileInd(File f, boolean compression) throws IOException, NoSuchAlgorithmException {
+        String sha1 = genSha1(f,compression);
         String data = "";
         File index = new File("./git/index");
         if (!index.exists()) {
