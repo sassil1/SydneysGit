@@ -85,6 +85,7 @@ public class CopyFileTester {
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
 
         // WARNING!! - if you change any of the file names assigned in here, the tester methods will no longer work properly!!!!
+        //ALSO - scroll to bottom and comment out the cleanup method before running if you want to see all the files and folders :)
         
         // initializing CopyFile Obj
         CopyFile gitproj = new CopyFile();
@@ -128,6 +129,7 @@ public class CopyFileTester {
         gitproj.storeFileObj(f);
         gitproj.storeFileObj(g);
         gitproj.storeFileObj(h);
+        
         gitproj.storeFileInd(f);
         gitproj.storeFileInd(g);
         gitproj.storeFileInd(h);
