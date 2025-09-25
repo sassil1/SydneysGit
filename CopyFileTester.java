@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.NoSuchAlgorithmException;
 
 public class CopyFileTester {
 
@@ -46,9 +47,10 @@ public class CopyFileTester {
         }
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
+        
+        //initializing CopyFile Obj
         CopyFile gitproj = new CopyFile();
-
         gitproj.initializerepo();
 
         //Create and fills files for practicing with sha1 later
@@ -83,7 +85,7 @@ public class CopyFileTester {
         //Makes sure Sha1 blob is created properly from random file
         System.out.println(gitproj.genSha1(f));
         
-        //Takes a file, turns it into a sha1 blob, stores it in index and creates a file in objects with the sha1 hash as its name
+        //Takes 3 files, turns it into a sha1 blob, stores it in index and creates a file in objects with the sha1 hash as its name
         gitproj.storeFileObj(f);
         gitproj.storeFileObj(g);
         gitproj.storeFileObj(h);
@@ -91,7 +93,7 @@ public class CopyFileTester {
         gitproj.storeFileInd(g);
         gitproj.storeFileInd(h);
        
-        //Next 3 lines delete the folder and output file (Comment out for testing the above, then uncomment and run before testing again)
+        //Delete the folder and output file (Comment out for testing the above, then uncomment and run before testing again)
         File git = new File("./git");
         cleanUp(git);
         f.delete();
