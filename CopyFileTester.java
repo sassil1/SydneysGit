@@ -77,27 +77,9 @@ public class CopyFileTester {
         if (!h.exists()) {
             h.createNewFile();
         }
-        File i = new File(f + ".zip"); 
-        if (!i.exists()) {
-            i.createNewFile();
-        }
-        File j = new File(g + ".zip"); 
-        if (!j.exists()) {
-            j.createNewFile();
-        }
-        File k = new File(h + ".zip");
-        if (!k.exists()) {
-            k.createNewFile();
-        }
         f.delete();
         g.delete();
         h.delete();
-        i.delete();
-        j.delete();
-        k.delete();
-
-
-
     }
 
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
@@ -124,7 +106,7 @@ public class CopyFileTester {
         if (!g.exists()) {
             g.createNewFile();
         }
-        String data2 = "My name is Sydney";
+        String data2 = "My name is Sydney. My name is Sydney. My name is Sydney. My name is Sydney. My name is Sydney. My name is Sydney. My name is Sydney. My name is Sydney. My name is Sydney. My name is Sydney.";
         Path file2 = Path.of("output2");
         Files.writeString(file2, data2);
 
@@ -132,7 +114,7 @@ public class CopyFileTester {
         if (!h.exists()) {
             h.createNewFile();
         }
-        String data3 = "I'm 18 years old and i love dogs";
+        String data3 = "I'm 18 years old and i love dogs. I'm 18 years old and i love dogs. I'm 18 years old and i love dogs. I'm 18 years old and i love dogs. I'm 18 years old and i love dogs. I'm 18 years old and i love dogs. I'm 18 years old and i love dogs. I'm 18 years old and i love dogs.";
         Path file3 = Path.of("output3");
         Files.writeString(file3, data3);
 
@@ -154,6 +136,22 @@ public class CopyFileTester {
         System.out.println(isBlobInObjects(f));
         System.out.println(isBlobInObjects(g));
         System.out.println(isBlobInObjects(h));
+
+        File i = new File(f + ".zip"); 
+        if (!i.exists()) {
+            i.createNewFile();
+        }
+        File j = new File(g + ".zip"); 
+        if (!j.exists()) {
+            j.createNewFile();
+        }
+        File k = new File(h + ".zip");
+        if (!k.exists()) {
+            k.createNewFile();
+        }
+        i.delete();
+        j.delete();
+        k.delete();
 
         // Reseting (Stretch Goal 2.3.1--> 2.4.2) (Comment out for testing the above, then uncomment and run before testing again)
         cleanUp();
