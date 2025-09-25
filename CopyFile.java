@@ -46,34 +46,63 @@ public class CopyFile {
         System.out.println("git repository created");
     }
 
-    public String genSha1(File f) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(f));
-        StringBuilder sb = new StringBuilder();
-        String line = br.readLine();
+    // public String genSha1failed(File f) throws IOException {
+    //     BufferedReader br = new BufferedReader(new FileReader(f));
+    //     StringBuilder sb = new StringBuilder();
+    //     String line = br.readLine();
 
-        while (line != null) {
-            sb.append(line);
-            sb.append(System.lineSeparator());
-            line = br.readLine();
+    //     while (line != null) {
+    //         sb.append(line);
+    //         sb.append(System.lineSeparator());
+    //         line = br.readLine();
+    //     }
+    //     String fileData = sb.toString();
+    //     br.close();
+
+    //     try {
+    //         MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
+    //         messageDigest.update(fileData.getBytes());
+    //         byte[] hashedData = messageDigest.digest();
+
+    //         BigInteger bigInteger = new BigInteger(1, hashedData);
+    //         String hashedText = bigInteger.toString(16);
+    //         return hashedText;
+    //     } catch (NoSuchAlgorithmException e) {
+    //         e.printStackTrace();
+    //     }
+    //     return null;
+    // }
+
+    public static String genSha1(File f) throws NoSuchAlgorithmException, IOException {
+        
+        String content = new String(Files.readAllBytes(Paths.get(f + "")));
+
+        // Get an instance of the MessageDigest for SHA-1
+        MessageDigest md = MessageDigest.getInstance("SHA-1");
+
+        // Convert the input string to bytes and update the message digest
+        md.update(content.getBytes());
+
+        // Compute the hash digest
+        byte[] digest = md.digest();
+
+        // Convert the byte array to a BigInteger (for easier hexadecimal conversion)
+        BigInteger bigInt = new BigInteger(1, digest);
+
+        // Convert the BigInteger to a hexadecimal string
+        String hexString = bigInt.toString(16);
+
+        // Pad with leading zeros if necessary to ensure a 40-character SHA-1 hash
+        while (hexString.length() < 40) {
+            hexString = "0" + hexString;
         }
-        String fileData = sb.toString();
-        br.close();
 
-        try {
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
-            messageDigest.update(fileData.getBytes());
-            byte[] hashedData = messageDigest.digest();
-
-            BigInteger bigInteger = new BigInteger(1, hashedData);
-            String hashedText = bigInteger.toString(16);
-            return hashedText;
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return hexString;
     }
 
-    public void storeFileObj(File f) throws IOException {
+
+
+    public void storeFileObj(File f) throws IOException, NoSuchAlgorithmException {
         String sha1 = genSha1(f);
         File blob = new File("./git/objects/" + sha1);
         if (!blob.exists()) {
@@ -89,7 +118,7 @@ public class CopyFile {
         }
     }
 
-    public void storeFileInd(File f) throws IOException {
+    public void storeFileInd(File f) throws IOException, NoSuchAlgorithmException {
         String sha1 = genSha1(f);
         String data = "";
         File index = new File("./git/index");
