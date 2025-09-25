@@ -70,7 +70,7 @@ public class CopyFileTester {
         gitproj.initializerepo();
 
         //For Compression - to turn off compression, just set c = false
-        boolean c = true;
+        boolean c = false;
 
         //Create and fills files for practicing with sha1 later
         File f = new File("output");
