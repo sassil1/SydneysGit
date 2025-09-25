@@ -33,20 +33,7 @@ public class CopyFileTester {
         }
     }
 
-    // public static void cleanUp(File f) throws IOException {
-    //     if (f.isDirectory()) {
-    //         for (File c : f.listFiles()) {
-    //             CopyFileTester.cleanUp(c);
-    //         }
-    //     }
-    //     if (!f.delete()) {
-    //         System.out.println("Failed to delete all files and folders");
-    //     } else {
-    //         System.out.println("Deleted " + f.getName());
-    //     }
-    // }
-
-    public static boolean isBlobInObjects(File f, boolean compression) throws NoSuchAlgorithmException, IOException {
+    public static boolean isBlobInObjects(File f) throws NoSuchAlgorithmException, IOException {
         CopyFile gitproj = new CopyFile();
         String directoryPath = "./git/objects";
         File folder = new File(directoryPath);
@@ -54,8 +41,8 @@ public class CopyFileTester {
             File[] files = folder.listFiles();
             if (files != null) {
                 for (int i = 0; i < files.length; i++) {
-                    if ((files[i].getName()).equals(gitproj.genSha1(f, compression))) {
-                        System.out.println("File: " + gitproj.genSha1(f, compression));
+                    if ((files[i].getName()).equals(gitproj.genSha1(f))) {
+                        System.out.println("File: " + gitproj.genSha1(f));
                         return true;
                     }
                 }
@@ -74,24 +61,43 @@ public class CopyFileTester {
             files[i].delete();
             System.out.println("Deleted " + files[i].getName());
         }
+        String filePath = "./git/index";
+        FileWriter writer = new FileWriter(filePath, false);
+        writer.close();
+
         File f = new File("output");
         if (!f.exists()) {
             f.createNewFile();
         }
-        f.delete();
         File g = new File("output2");
         if (!g.exists()) {
             g.createNewFile();
         }
-        g.delete();
         File h = new File("output3");
         if (!h.exists()) {
             h.createNewFile();
         }
+        File i = new File(f + ".zip"); 
+        if (!i.exists()) {
+            i.createNewFile();
+        }
+        File j = new File(g + ".zip"); 
+        if (!j.exists()) {
+            j.createNewFile();
+        }
+        File k = new File(h + ".zip");
+        if (!k.exists()) {
+            k.createNewFile();
+        }
+        f.delete();
+        g.delete();
         h.delete();
-        String filePath = "./git/index";
-        FileWriter writer = new FileWriter(filePath, false);
-        writer.close();
+        i.delete();
+        j.delete();
+        k.delete();
+
+
+
     }
 
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
@@ -102,15 +108,15 @@ public class CopyFileTester {
         CopyFile gitproj = new CopyFile();
         gitproj.initializerepo();
 
-        // For Compression - to turn off compression, just set c = false
-        boolean c = false;
+        // For Compression - to turn off compression, set as false, to turn on, set as true
+        gitproj.setCompression(true);
 
         // Create and fills files for practicing with sha1 later
         File f = new File("output");
         if (!f.exists()) {
             f.createNewFile();
         }
-        String data = "This is some text to write to the file.";
+        String data = "This is some text to write to the file. This is some text to write to the file. This is some text to write to the file. This is some text to write to the file. This is some text to write to the file. This is some text to write to the file. This is some text to write to the file.";
         Path file = Path.of("output");
         Files.writeString(file, data);
 
@@ -134,26 +140,23 @@ public class CopyFileTester {
         verifyInit();
 
         // Makes sure Sha1 blob is created properly from random file
-        System.out.println(gitproj.genSha1(f, c));
+        System.out.println(gitproj.genSha1(f));
 
         // Takes 3 files, turns into sha1 blobs, stores in index and creates files in objects with the sha1 hash as their names
-        gitproj.storeFileObj(f, c);
-        gitproj.storeFileObj(g, c);
-        gitproj.storeFileObj(h, c);
-        gitproj.storeFileInd(f, c);
-        gitproj.storeFileInd(g, c);
-        gitproj.storeFileInd(h, c);
+        gitproj.storeFileObj(f);
+        gitproj.storeFileObj(g);
+        gitproj.storeFileObj(h);
+        gitproj.storeFileInd(f);
+        gitproj.storeFileInd(g);
+        gitproj.storeFileInd(h);
 
         // Making sure blobs are in objects (Stretch Goal 2.3.1)
-        System.out.println(isBlobInObjects(f, c));
-        System.out.println(isBlobInObjects(g, c));
-        System.out.println(isBlobInObjects(h, c));
+        System.out.println(isBlobInObjects(f));
+        System.out.println(isBlobInObjects(g));
+        System.out.println(isBlobInObjects(h));
 
         // Reseting (Stretch Goal 2.3.1--> 2.4.2) (Comment out for testing the above, then uncomment and run before testing again)
         cleanUp();
-
-        //TO-DO: MAKE SURE ZIP COMPRESSION IS CORRECT AND MAKE SURE HEAD IS CORRECT
-
 
     }
 }

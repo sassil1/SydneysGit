@@ -18,6 +18,12 @@ import java.util.zip.ZipOutputStream;
 
 public class CopyFile {
 
+    private boolean compression = true;
+
+    public void setCompression(boolean b) {
+        compression = b;
+    }
+
     // Initializes Git repo, adds objects folder, index file, and heaad file
     public void initializerepo() throws IOException {
         File git = new File("./git");
@@ -74,7 +80,7 @@ public class CopyFile {
     }
     
     
-    public String genSha1(File f, boolean compression) throws NoSuchAlgorithmException, IOException {
+    public String genSha1(File f) throws NoSuchAlgorithmException, IOException {
         File f1;
         if (compression) {
             f1 = zipCompress(f);
@@ -107,8 +113,8 @@ public class CopyFile {
         return hexString;
     }
 
-    public void storeFileObj(File f, boolean compression) throws IOException, NoSuchAlgorithmException {
-        String sha1 = genSha1(f, compression);
+    public void storeFileObj(File f) throws IOException, NoSuchAlgorithmException {
+        String sha1 = genSha1(f);
         File f1 = f;
         if (compression) {
             f1 = zipCompress(f);
@@ -127,8 +133,8 @@ public class CopyFile {
         }
     }
 
-    public void storeFileInd(File f, boolean compression) throws IOException, NoSuchAlgorithmException {
-        String sha1 = genSha1(f,compression);
+    public void storeFileInd(File f) throws IOException, NoSuchAlgorithmException {
+        String sha1 = genSha1(f);
         String data = "";
         File index = new File("./git/index");
         if (!index.exists()) {
