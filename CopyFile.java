@@ -1,5 +1,7 @@
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,6 +12,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class CopyFile {
 
@@ -46,35 +51,97 @@ public class CopyFile {
         System.out.println("git repository created");
     }
 
-    // public String genSha1failed(File f) throws IOException {
-    //     BufferedReader br = new BufferedReader(new FileReader(f));
-    //     StringBuilder sb = new StringBuilder();
-    //     String line = br.readLine();
+    // public File zipCompress(File f, boolean compress) throws IOException {
+    // if (compress) {
+    // String sourceFilePath = f + ""; // Replace with your file path
+    // String zipFilePath = f + "zipped"; // Replace with your desired zip path
 
-    //     while (line != null) {
-    //         sb.append(line);
-    //         sb.append(System.lineSeparator());
-    //         line = br.readLine();
-    //     }
-    //     String fileData = sb.toString();
-    //     br.close();
+    // FileOutputStream fos = new FileOutputStream(zipFilePath);
+    // ZipOutputStream zos = new ZipOutputStream(fos);
 
-    //     try {
-    //         MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
-    //         messageDigest.update(fileData.getBytes());
-    //         byte[] hashedData = messageDigest.digest();
+    // // Create a ZipEntry for the file to be added to the archive
+    // ZipEntry zipEntry = new ZipEntry(new java.io.File(sourceFilePath).getName());
+    // zos.putNextEntry(zipEntry);
 
-    //         BigInteger bigInteger = new BigInteger(1, hashedData);
-    //         String hashedText = bigInteger.toString(16);
-    //         return hashedText;
-    //     } catch (NoSuchAlgorithmException e) {
-    //         e.printStackTrace();
-    //     }
-    //     return null;
+    // FileInputStream fis = new FileInputStream(sourceFilePath);
+    // byte[] buffer = new byte[1024];
+    // int bytesRead;
+
+    // // Read the source file and write it to the ZipOutputStream
+    // while ((bytesRead = fis.read(buffer)) != -1) {
+    // zos.write(buffer, 0, bytesRead);
     // }
 
-    public static String genSha1(File f) throws NoSuchAlgorithmException, IOException {
-        
+    // fis.close();
+    // zos.closeEntry(); // Close the current entry
+    // zos.close(); // Close the ZipOutputStream
+    // fos.close(); // Close the FileOutputStream
+
+    // System.out.println("File successfully compressed to: " + zipFilePath);
+    // File zip = new File(zipFilePath);
+    // if (!zip.exists()) {
+    // zip.createNewFile();
+    // }
+    // return zip;
+
+    // } else {
+    // return f;
+    // }
+    // }
+
+    // public File zipCompress(File f) {
+    //     String sourceFilePath = f + ""; // Replace with your file path
+    //     String zipFilePath = f + "zipped";
+
+    //     try (FileOutputStream fos = new FileOutputStream(zipFilePath);
+    //             ZipOutputStream zos = new ZipOutputStream(fos);
+    //             FileInputStream fis = new FileInputStream(sourceFilePath)) {
+
+    //         ZipEntry zipEntry = new ZipEntry(new java.io.File(sourceFilePath).getName());
+    //         zos.putNextEntry(zipEntry);
+
+    //         byte[] buffer = new byte[1024];
+    //         int bytesRead;
+    //         while ((bytesRead = fis.read(buffer)) > 0) {
+    //             zos.write(buffer, 0, bytesRead);
+    //         }
+
+    //         zos.closeEntry();
+    //         System.out.println("File '" + sourceFilePath + "' successfully compressed to '" + zipFilePath + "'");
+    //         return new File(zipFilePath);
+
+    //     } catch (IOException e) {
+    //         System.err.println("Error zipping file: " + e.getMessage());
+    //         e.printStackTrace();
+    //         return null;
+    //     }
+    // }
+
+    public File zipCompress(File f) throws IOException {
+        FileInputStream fis=new FileInputStream(f + "");
+
+        //Assign compressed file:file2 to FileOutputStream
+        FileOutputStream fos=new FileOutputStream(f + ".zip");
+
+        //Assign FileOutputStream to DeflaterOutputStream
+        DeflaterOutputStream dos=new DeflaterOutputStream(fos);
+
+        //read data from FileInputStream and write it into DeflaterOutputStream
+        int data;
+        while ((data=fis.read())!=-1)
+        {
+            dos.write(data);
+        }
+
+        //close the file
+        fis.close();
+        dos.close();
+        return new File(f + ".zip");
+    }
+    
+    
+    public String genSha1(File f) throws NoSuchAlgorithmException, IOException {
+
         String content = new String(Files.readAllBytes(Paths.get(f + "")));
 
         // Get an instance of the MessageDigest for SHA-1
@@ -100,8 +167,6 @@ public class CopyFile {
         return hexString;
     }
 
-
-
     public void storeFileObj(File f) throws IOException, NoSuchAlgorithmException {
         String sha1 = genSha1(f);
         File blob = new File("./git/objects/" + sha1);
@@ -109,8 +174,8 @@ public class CopyFile {
             blob.createNewFile();
             Path sourcePath = Paths.get("./" + f); // Replace with your source file path
             Path destinationPath = Paths.get(blob + ""); // Replace with your desired new file path
-                // Copy the file, replacing if the destination exists
-                Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+            // Copy the file, replacing if the destination exists
+            Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
 
             System.out.println("Added new blob file to objects!");
         } else {
