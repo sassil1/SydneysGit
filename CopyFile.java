@@ -141,9 +141,9 @@ public class CopyFile {
             index.createNewFile();
         }
         if (index.length() == 0) {
-            data = sha1 + " " + f.getName();
+            data = sha1 + " " + f.getPath();
         } else {
-            data = "\n" + sha1 + " " + f.getName();
+            data = "\n" + sha1 + " " + f.getPath();
         }
         String filePath = "./git/index";
         FileWriter writer = new FileWriter(filePath, true);

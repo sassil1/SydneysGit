@@ -65,7 +65,7 @@ public class CopyFileTester {
         FileWriter writer = new FileWriter(filePath, false);
         writer.close();
 
-        File f = new File("output");
+        File f = new File("directory/output");
         if (!f.exists()) {
             f.createNewFile();
         }
@@ -77,14 +77,19 @@ public class CopyFileTester {
         if (!h.exists()) {
             h.createNewFile();
         }
+        File dir = new File("directory");
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
         f.delete();
         g.delete();
         h.delete();
+        dir.delete();
     }
 
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
 
-        // WARNING!! - if you change any of the file names assigned in here, the tester methods will no longer work properly!!!!
+        // WARNING!! - if you change any of the file names assigned in here, the tester methods will no longer work properly!!!! If you do need to change the file or folder names (output1/2/3 or directory, make sure to command f and replace that name in any of the above methods as needed)
         //ALSO - scroll to bottom and comment out the cleanup method before running if you want to see all the files and folders :)
         
         // initializing CopyFile Obj
@@ -94,13 +99,18 @@ public class CopyFileTester {
         // For Compression - to turn off compression, set as false, to turn on, set as true
         gitproj.setCompression(true);
 
-        // Create and fills files for practicing with sha1 later
-        File f = new File("output");
+        // Create and fills files for practicing with sha1 later (the file called output is inside the folder called directory, meant to test that index properly displays the full file path)
+        File dir = new File("directory");
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+        
+        File f = new File("directory/output");
         if (!f.exists()) {
             f.createNewFile();
         }
         String data = "This is some text to write to the file. This is some text to write to the file. This is some text to write to the file. This is some text to write to the file. This is some text to write to the file. This is some text to write to the file. This is some text to write to the file.";
-        Path file = Path.of("output");
+        Path file = Path.of("directory/output");
         Files.writeString(file, data);
 
         File g = new File("output2");
