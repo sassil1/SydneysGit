@@ -136,14 +136,20 @@ public class CopyFile {
     public void storeFileInd(File f) throws IOException, NoSuchAlgorithmException {
         String sha1 = genSha1(f);
         String data = "";
+        String type = "";
+        if (f.isDirectory()) {
+            type = "tree";
+        } else {
+            type = "blob";
+        }
         File index = new File("./git/index");
         if (!index.exists()) {
             index.createNewFile();
         }
         if (index.length() == 0) {
-            data = sha1 + " " + f.getName();
+            data = type + " " + sha1 + " " + f.getPath();
         } else {
-            data = "\n" + sha1 + " " + f.getName();
+            data = "\n" + type + " " + sha1 + " " + f.getPath();
         }
         String filePath = "./git/index";
         FileWriter writer = new FileWriter(filePath, true);

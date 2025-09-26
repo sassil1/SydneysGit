@@ -156,7 +156,7 @@ public class CopyFileTester {
         k.delete();
 
         // Reseting (Stretch Goal 2.3.1--> 2.4.2) (Comment out for testing the above, then uncomment and run before testing again)
-        cleanUp();
+        //cleanUp();
 
     }
 }
