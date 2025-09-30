@@ -58,28 +58,26 @@ public class CopyFile {
     }
 
     public File zipCompress(File f) throws IOException {
-        FileInputStream fis=new FileInputStream(f + "");
+        FileInputStream fis = new FileInputStream(f + "");
 
-        //Assign compressed file:file2 to FileOutputStream
-        FileOutputStream fos=new FileOutputStream(f + ".zip");
+        // Assign compressed file:file2 to FileOutputStream
+        FileOutputStream fos = new FileOutputStream(f + ".zip");
 
-        //Assign FileOutputStream to DeflaterOutputStream
-        DeflaterOutputStream dos=new DeflaterOutputStream(fos);
+        // Assign FileOutputStream to DeflaterOutputStream
+        DeflaterOutputStream dos = new DeflaterOutputStream(fos);
 
-        //read data from FileInputStream and write it into DeflaterOutputStream
+        // read data from FileInputStream and write it into DeflaterOutputStream
         int data;
-        while ((data=fis.read())!=-1)
-        {
+        while ((data = fis.read()) != -1) {
             dos.write(data);
         }
 
-        //close the file
+        // close the file
         fis.close();
         dos.close();
         return new File(f + ".zip");
     }
-    
-    
+
     public String genSha1(File f) throws NoSuchAlgorithmException, IOException {
         File f1;
         if (compression) {
@@ -118,7 +116,7 @@ public class CopyFile {
         File f1 = f;
         if (compression) {
             f1 = zipCompress(f);
-        } 
+        }
         File blob = new File("./git/objects/" + sha1);
         if (!blob.exists()) {
             blob.createNewFile();
