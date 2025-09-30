@@ -66,6 +66,32 @@ public class CopyFile {
         return new File(f + ".zip");
     }
 
+    public String genSha1(String s) throws NoSuchAlgorithmException, IOException {
+        String content = s;
+
+        // Get an instance of the MessageDigest for SHA-1
+        MessageDigest md = MessageDigest.getInstance("SHA-1");
+
+        // Convert the input string to bytes and update the message digest
+        md.update(content.getBytes());
+
+        // Compute the hash digest
+        byte[] digest = md.digest();
+
+        // Convert the byte array to a BigInteger (for easier hexadecimal conversion)
+        BigInteger bigInt = new BigInteger(1, digest);
+
+        // Convert the BigInteger to a hexadecimal string
+        String hexString = bigInt.toString(16);
+
+        // Pad with leading zeros if necessary to ensure a 40-character SHA-1 hash
+        while (hexString.length() < 40) {
+            hexString = "0" + hexString;
+        }
+
+        return hexString;
+    }
+
     public String genSha1(File f) throws NoSuchAlgorithmException, IOException {
         File f1;
         if (compression) {
@@ -123,11 +149,12 @@ public class CopyFile {
         String sha1 = genSha1(f);
         String data = "";
         String type = "";
-        if (f.isDirectory()) {
+        if (true) {
             type = "tree";
         } else {
             type = "blob";
         }
+
         File index = new File("./git/index");
         if (!index.exists()) {
             index.createNewFile();
@@ -142,5 +169,21 @@ public class CopyFile {
         writer.write(data);
         writer.close();
         System.out.println("File data and name stored in index");
+    }
+
+    public void writeFile(String path, String contents) throws IOException {
+        File f = new File(path);
+        if (!f.exists()) {
+            f.createNewFile();
+        }
+        Path filePath = Path.of(path);
+        Files.writeString(filePath, contents);
+    }
+
+    public void createDir(String path) throws IOException {
+        File f = new File(path);
+        if (!f.exists()) {
+            f.mkdir();
+        }
     }
 }
