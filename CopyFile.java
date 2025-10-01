@@ -6,6 +6,8 @@ import java.util.zip.*;
 
 public class CopyFile {
 
+    private String directory;
+
     private boolean compression = true;
 
     public void setCompression(boolean b) {
@@ -13,29 +15,37 @@ public class CopyFile {
     }
 
     // Initializes Git repo, adds objects folder, index file, and heaad file
-    public void initializerepo() throws IOException {
-        File git = new File("./git");
+    public void initializerepo(String path) throws IOException {
+        directory = path;
+        File mainDir = new File(path);
+        if (!mainDir.exists()) {
+            mainDir.mkdir();
+            System.out.println("Created main directory folder!");
+        } else {
+            System.out.println("Main directory folder already exists!");
+        }
+        File git = new File(path + "/git");
         if (!git.exists()) {
             git.mkdir();
             System.out.println("Created git folder!");
         } else {
             System.out.println("git folder already exists");
         }
-        File objects = new File("./git/objects");
+        File objects = new File(path + "/git/objects");
         if (!objects.exists()) {
             objects.mkdir();
             System.out.println("Created objects folder!");
         } else {
             System.out.println("objects folder already exists");
         }
-        File index = new File("./git/index");
+        File index = new File(path + "/git/index");
         if (!index.exists()) {
             index.createNewFile();
             System.out.println("Created index file!");
         } else {
             System.out.println("index file already exists");
         }
-        File head = new File("./git/HEAD");
+        File head = new File(path + "/git/HEAD");
         if (!head.exists()) {
             head.createNewFile();
             System.out.println("Created head file!");
@@ -131,13 +141,10 @@ public class CopyFile {
         if (compression) {
             f1 = zipCompress(f);
         }
-        File blob = new File("./git/objects/" + sha1);
+        File blob = new File(directory + "/git/objects/" + sha1);
         if (!blob.exists()) {
             blob.createNewFile();
-            Path sourcePath = Paths.get("./" + f1); // Replace with your source file path
-            Path destinationPath = Paths.get(blob + ""); // Replace with your desired new file path
-            // Copy the file, replacing if the destination exists
-            Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+            writeFile(blob.getPath(), Files.readString(f1.toPath()));
 
             System.out.println("Added new blob file to objects!");
         } else {
@@ -149,26 +156,30 @@ public class CopyFile {
         String sha1 = genSha1(f);
         String data = "";
         String type = "";
-        if (true) {
+        if (false) {
             type = "tree";
         } else {
             type = "blob";
         }
 
-        File index = new File("./git/index");
+        File index = new File(directory + "/git/index");
         if (!index.exists()) {
             index.createNewFile();
         }
+
+        if (Files.readString(index.toPath()).contains(sha1))
+            return;
+
         if (index.length() == 0) {
-            data = type + " " + sha1 + " " + f.getPath();
+            data = type + " " + sha1 + " " + f.getPath().substring(f.getPath().indexOf("/") + 1);
         } else {
-            data = "\n" + type + " " + sha1 + " " + f.getPath();
+            data = "\n" + type + " " + sha1 + " " + f.getPath().substring(f.getPath().indexOf("/") + 1);
         }
-        String filePath = "./git/index";
+        String filePath = directory + "/git/index";
         FileWriter writer = new FileWriter(filePath, true);
         writer.write(data);
         writer.close();
-        System.out.println("File data and name stored in index");
+        System.out.println("File data hash and name stored in index");
     }
 
     public void writeFile(String path, String contents) throws IOException {
@@ -185,5 +196,82 @@ public class CopyFile {
         if (!f.exists()) {
             f.mkdir();
         }
+    }
+
+    // blobs and indexes all files
+    public void refresh(String path) throws IOException, NoSuchAlgorithmException {
+        File[] subFiles = new File(path).listFiles();
+        for (File f : subFiles) {
+            if (f.getName().equals("git")) {
+                continue; // ignore our git files that we make
+            }
+            if (f.isDirectory()) {
+                refresh(f.getPath());
+            } else {
+                storeFileObj(f);
+                storeFileInd(f);
+            }
+        }
+    }
+
+    public void makeTree(String workingIndex) throws IOException, NoSuchAlgorithmException {
+        // find the path with the most file delimiters (slashes)
+        String longestPath = longestPath(workingIndex.split("\n"));
+        // this one still contains "blob" or "tree" and the sha1 and other junk
+        // so we clean it up to just the path
+        String uglyPathOfParentFolder = substringToLastOccuranceOf(longestPath, '/');
+        String pathOfParentFolder = directory + "/" + substringFromLastOccuranceOf(uglyPathOfParentFolder, ' ');
+        String localPathOfDeepestFileRelativeToParentFolder = substringFromLastOccuranceOf(longestPath, '/');
+
+        String treeContents = "blob " + genSha1(localPathOfDeepestFileRelativeToParentFolder) + " "
+                + localPathOfDeepestFileRelativeToParentFolder;
+        writeFile(directory + "/git/objects/" + genSha1(treeContents), treeContents);
+
+        workingIndex = workingIndex.substring(0, workingIndex.indexOf(longestPath))
+                + workingIndex.substring(workingIndex.indexOf(longestPath) + longestPath.length());
+    }
+
+    public int countOccurances(String str, char c) {
+        int count = 0;
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) == c)
+                count++;
+        }
+        return count;
+    }
+
+    public String substringToLastOccuranceOf(String str, char c) {
+        int count = countOccurances(str, c);
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) == c)
+                count--;
+            if (count == 0)
+                return str.substring(0, i);
+        }
+        return null;
+    }
+
+    public String substringFromLastOccuranceOf(String str, char c) {
+        int count = countOccurances(str, c);
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) == c)
+                count--;
+            if (count == 0)
+                return str.substring(i + 1);
+        }
+        return null;
+    }
+
+    public String longestPath(String[] paths) {
+        int mostSlashes = 0;
+        String longestPath = paths[0];
+        for (String line : paths) {
+            int numSlashes = countOccurances(longestPath, '/');
+            if (numSlashes > mostSlashes) {
+                longestPath = line;
+                mostSlashes = numSlashes;
+            }
+        }
+        return longestPath;
     }
 }

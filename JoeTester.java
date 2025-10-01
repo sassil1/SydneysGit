@@ -1,21 +1,22 @@
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
+import java.nio.file.*;
 
 public class JoeTester {
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
-        CopyFile gitproj = new CopyFile();
-        gitproj.initializerepo();
-        gitproj.setCompression(false);
+        CopyFile git = new CopyFile();
+        git.setCompression(false);
 
-        // create and store "Joe"
-        gitproj.writeFile("Joe", "asdfasdflol");
-        gitproj.storeFileObj(new File("Joe"));
-        gitproj.storeFileInd(new File("Joe"));
+        git.initializerepo("ProjectFolder");
 
-        // create and store "JOEINDIR" in "FunnyDir"
-        gitproj.createDir("FunnyDir");
-        gitproj.writeFile("FunnyDir/JOEINDIR", "IM IN A DIR HELP ME");
-        gitproj.storeFileObj(new File("FunnyDir/JOEINDIR"));
-        gitproj.storeFileInd(new File("FunnyDir/JOEINDIR"));
+        git.writeFile("ProjectFolder/crapppppp", "sam krupp isnside my patnazz");
+
+        git.createDir("ProjectFolder/JUNKFOLDER");
+
+        git.writeFile("ProjectFolder/JUNKFOLDER/h3h3h3", "h3h3h3h3h3h3h3h3");
+
+        git.refresh("ProjectFolder");
+
+        git.makeTree(Files.readString(new File("ProjectFolder/git/index").toPath()));
     }
 }
