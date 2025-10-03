@@ -2,7 +2,6 @@ import java.io.*;
 import java.math.BigInteger;
 import java.nio.file.*;
 import java.security.*;
-import java.util.ArrayList;
 import java.util.zip.*;
 
 public class CopyFile {
@@ -223,25 +222,41 @@ public class CopyFile {
         if (!longestPath.contains("/"))
             return;
 
-        // this one still contains "blob" or "tree" and the sha1 and other junk
-        // so we clean it up to just the path
         String uglyPathOfParentFolder = substringToLastOccuranceOf(longestPath, '/');
         String pathOfParentFolder = directory + "/" + substringFromLastOccuranceOf(uglyPathOfParentFolder, ' ');
         String localPathOfDeepestFileRelativeToParentFolder = substringFromLastOccuranceOf(longestPath, '/');
 
+        // write the stuff that should be written to the tree
         String type = getType(pathOfParentFolder + "/" + localPathOfDeepestFileRelativeToParentFolder);
         String treeContents = type + " " + genSha1(localPathOfDeepestFileRelativeToParentFolder) + " "
                 + localPathOfDeepestFileRelativeToParentFolder;
 
-        for (String path : workingIndex.split("\n")) {
-            if (!path.equals(uglyPathOfParentFolder) && path.contains(pathOfParentFolder)) {
-                String otherTreeContents = directory + "/" + substringFromLastOccuranceOf(path, ' ');
-                treeContents += "\n" + otherTreeContents;
+        // shorten working index to subtract the stuff from the line we just did stuff
+        // on
+        workingIndex = workingIndex.substring(0, workingIndex.indexOf(localPathOfDeepestFileRelativeToParentFolder) - 1)
+                + workingIndex.substring(workingIndex.indexOf(localPathOfDeepestFileRelativeToParentFolder)
+                        + localPathOfDeepestFileRelativeToParentFolder.length());
+
+        // then check other lines and do the same thing IF they have the same parent
+        // folder
+        for (String line : workingIndex.split("\n")) {
+            String path = directory + "/" + substringFromLastOccuranceOf(line, ' ');
+            path = path;
+            if (!(path.substring(0, path.length())).equals(pathOfParentFolder)
+                    && (path).contains(pathOfParentFolder)) {
+                String otherContentsOfParentFolder = substringFromLastOccuranceOf(path, '/');
+                String otherType = getType(pathOfParentFolder + "/" + otherContentsOfParentFolder);
+                treeContents += "\n" + otherType + " " + genSha1(otherContentsOfParentFolder) + " "
+                        + otherContentsOfParentFolder;
+                workingIndex = workingIndex.substring(0,
+                        workingIndex.indexOf(otherContentsOfParentFolder) - 1)
+                        + workingIndex.substring(workingIndex.indexOf(otherContentsOfParentFolder)
+                                + otherContentsOfParentFolder.length());
             }
         }
         writeFile(directory + "/git/objects/" + genSha1(treeContents), treeContents);
 
-        // makeTree(workingIndex);
+        makeTree(workingIndex);
     }
 
     public int countOccurances(String str, char c) {
@@ -279,7 +294,7 @@ public class CopyFile {
         int mostSlashes = 0;
         String longestPath = paths[0];
         for (String line : paths) {
-            int numSlashes = countOccurances(longestPath, '/');
+            int numSlashes = countOccurances(line, '/');
             if (numSlashes > mostSlashes) {
                 longestPath = line;
                 mostSlashes = numSlashes;

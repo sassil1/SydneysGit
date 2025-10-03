@@ -9,16 +9,22 @@ public class JoeTester {
 
         git.initializerepo("ProjectFolder");
 
-        git.writeFile("ProjectFolder/crapppppp", "sam krupp isnside mi patnazz");
+        git.writeFile("ProjectFolder/crapppppp", "contents of crapppppp");
 
         git.createDir("ProjectFolder/JUNKFOLDER");
 
-        git.writeFile("ProjectFolder/JUNKFOLDER/h3h3h3", "h3h3h3h3h3h3h3h3");
+        git.writeFile("ProjectFolder/JUNKFOLDER/h3h3h3", "contents of h3h3h3");
 
-        git.writeFile("ProjectFolder/JUNKFOLDER/h2h2h2h2", "hh2h2h222h2h22h2");
+        git.writeFile("ProjectFolder/JUNKFOLDER/h2h2h2h2", "contents of h2h2h2");
+
+        git.createDir("ProjectFolder/JUNKFOLDER/sub_folder");
+
+        git.writeFile("ProjectFolder/JUNKFOLDER/sub_folder/SUBBEST_FILE", "contents of subbest file");
 
         git.refresh("ProjectFolder");
 
-        git.makeTree(Files.readString(new File("ProjectFolder/git/index").toPath()));
+        String indexContents = Files.readString(new File("ProjectFolder/git/index").toPath());
+
+        git.makeTree(indexContents);
     }
 }
