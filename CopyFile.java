@@ -2,6 +2,7 @@ import java.io.*;
 import java.math.BigInteger;
 import java.nio.file.*;
 import java.security.*;
+import java.util.ArrayList;
 import java.util.zip.*;
 
 public class CopyFile {
@@ -217,18 +218,30 @@ public class CopyFile {
     public void makeTree(String workingIndex) throws IOException, NoSuchAlgorithmException {
         // find the path with the most file delimiters (slashes)
         String longestPath = longestPath(workingIndex.split("\n"));
+
+        // if we're done
+        if (!longestPath.contains("/"))
+            return;
+
         // this one still contains "blob" or "tree" and the sha1 and other junk
         // so we clean it up to just the path
         String uglyPathOfParentFolder = substringToLastOccuranceOf(longestPath, '/');
         String pathOfParentFolder = directory + "/" + substringFromLastOccuranceOf(uglyPathOfParentFolder, ' ');
         String localPathOfDeepestFileRelativeToParentFolder = substringFromLastOccuranceOf(longestPath, '/');
 
-        String treeContents = "blob " + genSha1(localPathOfDeepestFileRelativeToParentFolder) + " "
+        String type = getType(pathOfParentFolder + "/" + localPathOfDeepestFileRelativeToParentFolder);
+        String treeContents = type + " " + genSha1(localPathOfDeepestFileRelativeToParentFolder) + " "
                 + localPathOfDeepestFileRelativeToParentFolder;
+
+        for (String path : workingIndex.split("\n")) {
+            if (!path.equals(uglyPathOfParentFolder) && path.contains(pathOfParentFolder)) {
+                String otherTreeContents = directory + "/" + substringFromLastOccuranceOf(path, ' ');
+                treeContents += "\n" + otherTreeContents;
+            }
+        }
         writeFile(directory + "/git/objects/" + genSha1(treeContents), treeContents);
 
-        workingIndex = workingIndex.substring(0, workingIndex.indexOf(longestPath))
-                + workingIndex.substring(workingIndex.indexOf(longestPath) + longestPath.length());
+        // makeTree(workingIndex);
     }
 
     public int countOccurances(String str, char c) {
@@ -273,5 +286,14 @@ public class CopyFile {
             }
         }
         return longestPath;
+    }
+
+    public String getType(String path) {
+        String type = "";
+        if (new File(path).isDirectory())
+            type = "tree";
+        else
+            type = "blob";
+        return type;
     }
 }
