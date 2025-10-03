@@ -2,6 +2,7 @@ import java.io.*;
 import java.math.BigInteger;
 import java.nio.file.*;
 import java.security.*;
+import java.util.ArrayList;
 import java.util.zip.*;
 
 public class CopyFile {
@@ -201,9 +202,14 @@ public class CopyFile {
     // blobs and indexes all files
     public void refresh(String path) throws IOException, NoSuchAlgorithmException {
         File[] subFiles = new File(path).listFiles();
+
+        String gitignore = "";
+        if (new File(path + "/gitignore").exists())
+            gitignore = Files.readString(new File(path + "/gitignore").toPath());
+
         for (File f : subFiles) {
-            if (f.getName().equals("git")) {
-                continue; // ignore our git files that we make
+            if (f.getName().equals("git") || gitignore.contains(f.getName())) {
+                continue; // ignore our git files that we make or gitignored files
             }
             if (f.isDirectory()) {
                 refresh(f.getPath());

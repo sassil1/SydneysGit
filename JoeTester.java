@@ -9,6 +9,8 @@ public class JoeTester {
 
         git.initializerepo("ProjectFolder");
 
+        git.writeFile("ProjectFolder/gitignore", "JUNKFOLDER");
+
         git.writeFile("ProjectFolder/crapppppp", "contents of crapppppp");
 
         git.createDir("ProjectFolder/JUNKFOLDER");
