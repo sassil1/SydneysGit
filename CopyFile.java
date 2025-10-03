@@ -8,7 +8,7 @@ public class CopyFile {
 
     private String directory;
 
-    private boolean compression = true;
+    private boolean compression = false;
 
     public void setCompression(boolean b) {
         compression = b;
