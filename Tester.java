@@ -39,7 +39,7 @@ public class Tester {
 
         // "refresh", or generate blob/index files for all the stuff in the project
         // folder
-        git.refresh("ProjectFolder");
+        git.refresh("ProjectFolder"); // this will generate the git files and the blob files
 
         // get the contents of the index
         String indexContents = Files.readString(new File("ProjectFolder/git/index").toPath());
