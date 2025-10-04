@@ -1,43 +1,41 @@
 # ME WHEN I CODE BY MYSELF:
-## a=b+c;
+> ## a=b+c;
 
 # ME WHEN I CODE WITH SOMEONE WATCHING
-// Adding two variables together results in one bigger variable. 
-// I am choosing to call this one 'A' and it is the result of adding 'B' and 'C'!
+> // Adding two variables together results in one bigger variable. 
+> // I am choosing to call this one 'A' and it is the result of adding 'B' and 'C'!
+> 
+> int a = 0; // initializing it here, will make it the sum later
+> int b = 5; // will add this, and the next thing too
+> int c = 5; // I already described what this is, read that comment please
 
-int a = 0; // initializing it here, will make it the sum later
-int b = 5; // will add this, and the next thing too
-int c = 5; // I already described what this is, read that comment please
+> // using the sum method, this is more readable and better
+> int tempA = sum(c, b);
 
-// using the sum method, this is more readable and better
-int tempA = sum(c, b);
+> if (a != tempA) // we want to make sure we don't do any unecessary operations, for big O of course.
+>     a = tempA;
 
-if (a != tempA) // we want to make sure we don't do any unecessary operations, for big O of course.
-    a = tempA;
-
-///
-/// This method adds two variables, one called 'C' and one called 'B'.
-///
-public static int sum(int C, int B)
-{
-    return C + B;
-}
+> /// @Summary
+> /// This method adds two variables, one called 'C' and one called 'B'.
+>/// @Return: int
+> public static int sum(int C, int B)
+> {
+>     return C + B;
+> }
 
 
 # ===============================================
 #Joe'sUpdate
-I don't know what Sydney did down there, I didn't read it (sorry). Anyway, I made a few changes. So read this first, and if it doesn't make sense in comparison to someone else's stuff then ignore her stuff. I am too tired to read through all of it to figure out what I changed.
+I made a few changes. So read this first, and if it doesn't make sense in comparison to someone else's stuff then ignore her stuff. I am too tired to read through all of it to figure out what I changed.
 
 Basically, I changed 2 things -- the way that Sydney's code is used, and implemented a maketree thingy like we were supposed to.
 
 Before, Sydney's code required individual method calls for each file in order to make a blob and to index it. Now I just have one method that runs and does all this automatically (unless you add the file into the gitignore).
 
 I also implemented the maketree method:
-JUST R̶̳̒Ê̸̲A̵͙͆D̶̯̈ Ṫ̵̢͇̯̤̙̤̗̅H̷̨̖͎͓̒E̵̝̦͒͐̏̍̇ ̷̻̱̙̈̇́̾̽̀͋ c̵͓͎̙͈̉̾o̸̡̘̘̟̙͊͊̅m̴̹͉̑̽m̴͚̒͝ͅẻ̶̥̼n̸͎̽̀̔̚͝͝ͅt̸̢͍̣̥͕͛̀̄́͌͂s̸̭͍͋͒͠
+Please read the comments.
 
-PLEASE PLEASE PLEASE MAKE USE OF MY GLORIOUS COMMENTS. THEY EXPLAIN IT SO WELL. LIKE HALF OF THE CODE IS JUST COMMENTS.
-
-Me when I code for other people: 
+This can all be explained and tested in my helpful Tester.java.
 
 # SydneysGit
 In the Copy File class, the compression instance variable decides if the code will all run with or without zip compression (true - will compress, false = won't compress). Use the setCompression method in the tester (already called in the main method) to swtich between compression/no compression
