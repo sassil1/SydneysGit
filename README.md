@@ -2,26 +2,26 @@
 > ## a=b+c;
 
 # ME WHEN I CODE WITH SOMEONE WATCHING
-> // Adding two variables together results in one bigger variable. 
-> // I am choosing to call this one 'A' and it is the result of adding 'B' and 'C'!
+> // Adding two variables together results in one bigger variable.  \
+> // I am choosing to call this one 'A' and it is the result of adding 'B' and 'C'! \
 > 
-> int a = 0; // initializing it here, will make it the sum later
-> int b = 5; // will add this, and the next thing too
-> int c = 5; // I already described what this is, read that comment please
+> int a = 0; // initializing it here, will make it the sum later \
+> int b = 5; // will add this, and the next thing too \
+> int c = 5; // I already described what this is, read that comment please \
 
-> // using the sum method, this is more readable and better
-> int tempA = sum(c, b);
+> // using the sum method, this is more readable and better \
+> int tempA = sum(c, b); \
 
-> if (a != tempA) // we want to make sure we don't do any unecessary operations, for big O of course.
->     a = tempA;
+> if (a != tempA) // we want to make sure we don't do any unecessary operations, for big O of course. \
+>     a = tempA; \
 
-> /// @Summary
-> /// This method adds two variables, one called 'C' and one called 'B'.
->/// @Return: int
-> public static int sum(int C, int B)
-> {
->     return C + B;
-> }
+> /// @Summary \
+> /// This method adds two variables, one called 'C' and one called 'B'. \
+>/// @Return: int \ 
+> public static int sum(int C, int B) \ 
+> { \ 
+>     return C + B; \ 
+> } \
 
 
 # ===============================================
