@@ -221,47 +221,70 @@ public class CopyFile {
     }
 
     public void makeTree(String workingIndex) throws IOException, NoSuchAlgorithmException {
-        // find the path with the most file delimiters (slashes)
+        // find the longest path.
+        // this will be a line in the index, like blob h4sh file/name.
         String longestPath = longestPath(workingIndex.split("\n"));
 
-        // if we're done
+        // if we're done, stop
         if (!longestPath.contains("/"))
             return;
 
-        String uglyPathOfParentFolder = substringToLastOccuranceOf(longestPath, '/');
-        String pathOfParentFolder = directory + "/" + substringFromLastOccuranceOf(uglyPathOfParentFolder, ' ');
-        String localPathOfDeepestFileRelativeToParentFolder = substringFromLastOccuranceOf(longestPath, '/');
+        // define the path of the parent folder of whatever the deepest file is
+        String parentFolderPath = directory + "/"
+                + substringFromLastOccuranceOf(substringToLastOccuranceOf(longestPath, '/'), ' ');
 
-        // write the stuff that should be written to the tree
-        String type = getType(pathOfParentFolder + "/" + localPathOfDeepestFileRelativeToParentFolder);
-        String treeContents = type + " " + genSha1(localPathOfDeepestFileRelativeToParentFolder) + " "
-                + localPathOfDeepestFileRelativeToParentFolder;
+        // define the name the deepest file
+        String deepestFile = substringFromLastOccuranceOf(longestPath, '/');
 
-        // shorten working index to subtract the stuff from the line we just did stuff
-        // on
-        workingIndex = workingIndex.substring(0, workingIndex.indexOf(localPathOfDeepestFileRelativeToParentFolder) - 1)
-                + workingIndex.substring(workingIndex.indexOf(localPathOfDeepestFileRelativeToParentFolder)
-                        + localPathOfDeepestFileRelativeToParentFolder.length());
+        // figure out the type (blob or tree)
+        String type = getType(parentFolderPath + "/" + deepestFile);
 
-        // then check other lines and do the same thing IF they have the same parent
-        // folder
+        // save what should be written to the tree file
+        // we don't make the file yet, because we need to generate a sha1 based on the
+        // trees entire contents.
+        String treeContents = type + " " + genSha1(deepestFile) + " "
+                + deepestFile;
+
+        // shorten working index to subtract the stuff from the line we just "treed"
+        workingIndex = workingIndex.substring(0, workingIndex.indexOf(deepestFile) - 1)
+                + workingIndex.substring(workingIndex.indexOf(deepestFile) + deepestFile.length());
+
+        // then check other lines and do the same thing, if they have the same parent
         for (String line : workingIndex.split("\n")) {
-            String path = directory + "/" + substringFromLastOccuranceOf(line, ' ');
-            path = path;
-            if (!(path.substring(0, path.length())).equals(pathOfParentFolder)
-                    && (path).contains(pathOfParentFolder)) {
-                String otherContentsOfParentFolder = substringFromLastOccuranceOf(path, '/');
-                String otherType = getType(pathOfParentFolder + "/" + otherContentsOfParentFolder);
-                treeContents += "\n" + otherType + " " + genSha1(otherContentsOfParentFolder) + " "
-                        + otherContentsOfParentFolder;
-                workingIndex = workingIndex.substring(0,
-                        workingIndex.indexOf(otherContentsOfParentFolder) - 1)
-                        + workingIndex.substring(workingIndex.indexOf(otherContentsOfParentFolder)
-                                + otherContentsOfParentFolder.length());
+            // define the path of the line
+            String linePath = directory + "/" + substringFromLastOccuranceOf(line, ' ');
+
+            // previously we simlpy subtract the deepest file from the workingindex path.
+            // so, we need to make sure we aren't doing the same thing again on it already.
+            // we make sure that isn't the case when we check for other files that
+            // are in the same parent folder.
+            if (!(linePath.substring(0, linePath.length())).equals(parentFolderPath)
+                    && (linePath).contains(parentFolderPath)) {
+                // define the other subfile (could be a folder also)
+                String otherSubFile = substringFromLastOccuranceOf(linePath, '/');
+                // define the other subfile's type
+                String otherType = getType(parentFolderPath + "/" + otherSubFile);
+
+                // add this stuff to the tree as well
+                String potentialNewEntryToTree = "\n" + otherType + " " + genSha1(otherSubFile) + " "
+                        + otherSubFile;
+
+                // it's possible there is an entry already and we don't need to do it again.
+                if (!treeContents.contains(potentialNewEntryToTree))
+                    treeContents += potentialNewEntryToTree;
+
+                // shorten the working index again
+                workingIndex = workingIndex.substring(0, workingIndex.indexOf(otherSubFile) - 1)
+                        + workingIndex.substring(workingIndex.indexOf(otherSubFile) + otherSubFile.length());
             }
         }
+
+        // write the tree file that we just worked so hard to figure out
         writeFile(directory + "/git/objects/" + genSha1(treeContents), treeContents);
 
+        System.out.println("Tree'd " + parentFolderPath + "!");
+
+        // do it again until we're done!
         makeTree(workingIndex);
     }
 
