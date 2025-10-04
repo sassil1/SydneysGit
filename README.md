@@ -1,13 +1,7 @@
-# Heading level 1	
-ME WHEN I CODE BY MYSELF:
+# ME WHEN I CODE BY MYSELF:
+## a=b+c;
 
-# Heading level 2
-a=b+c;
-
-# Heading level 1
-# Heading leve 6
-ME WHEN I CODE WITH SOMEONE WATCHING
-// (ᵕ,,¬﹏¬,,) 
+# ME WHEN I CODE WITH SOMEONE WATCHING
 // Adding two variables together results in one bigger variable. 
 // I am choosing to call this one 'A' and it is the result of adding 'B' and 'C'!
 
@@ -30,7 +24,7 @@ public static int sum(int C, int B)
 }
 
 
-===============================================
+# ===============================================
 #Joe'sUpdate
 I don't know what Sydney did down there, I didn't read it (sorry). Anyway, I made a few changes. So read this first, and if it doesn't make sense in comparison to someone else's stuff then ignore her stuff. I am too tired to read through all of it to figure out what I changed.
 
