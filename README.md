@@ -1,5 +1,36 @@
-https://external-preview.redd.it/VJKytXlRyG7b2K_DD2o5WZe0ri6eE9P24dBgbkBLZIA.jpg?auto=webp&s=a48a7095ff5d0ec467b0b4a3f968c803c0930d14
+# Heading level 1	
+ME WHEN I CODE BY MYSELF:
 
+# Heading level 2
+a=b+c;
+
+# Heading level 1
+# Heading leve 6
+ME WHEN I CODE WITH SOMEONE WATCHING
+// (ᵕ,,¬﹏¬,,) 
+// Adding two variables together results in one bigger variable. 
+// I am choosing to call this one 'A' and it is the result of adding 'B' and 'C'!
+
+int a = 0; // initializing it here, will make it the sum later
+int b = 5; // will add this, and the next thing too
+int c = 5; // I already described what this is, read that comment please
+
+// using the sum method, this is more readable and better
+int tempA = sum(c, b);
+
+if (a != tempA) // we want to make sure we don't do any unecessary operations, for big O of course.
+    a = tempA;
+
+///
+/// This method adds two variables, one called 'C' and one called 'B'.
+///
+public static int sum(int C, int B)
+{
+    return C + B;
+}
+
+
+===============================================
 #Joe'sUpdate
 I don't know what Sydney did down there, I didn't read it (sorry). Anyway, I made a few changes. So read this first, and if it doesn't make sense in comparison to someone else's stuff then ignore her stuff. I am too tired to read through all of it to figure out what I changed.
 

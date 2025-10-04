@@ -2,7 +2,6 @@ import java.io.*;
 import java.math.BigInteger;
 import java.nio.file.*;
 import java.security.*;
-import java.util.ArrayList;
 import java.util.zip.*;
 
 public class CopyFile {
@@ -157,6 +156,8 @@ public class CopyFile {
         String sha1 = genSha1(f);
         String data = "";
         String type = "";
+
+        // im sorry sydney this didn't really work :((((
         if (false) {
             type = "tree";
         } else {
