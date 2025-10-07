@@ -1,9 +1,5 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.*;
+import java.nio.file.*;
 import java.security.NoSuchAlgorithmException;
 
 public class CopyFileTester {
@@ -84,14 +80,17 @@ public class CopyFileTester {
 
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
 
-        // WARNING!! - if you change any of the file names assigned in here, the tester methods will no longer work properly!!!!
-        //ALSO - scroll to bottom and comment out the cleanup method before running if you want to see all the files and folders :)
-        
+        // WARNING!! - if you change any of the file names assigned in here, the tester
+        // methods will no longer work properly!!!!
+        // ALSO - scroll to bottom and comment out the cleanup method before running if
+        // you want to see all the files and folders :)
+
         // initializing CopyFile Obj
         CopyFile gitproj = new CopyFile();
         gitproj.initializerepo();
 
-        // For Compression - to turn off compression, set as false, to turn on, set as true
+        // For Compression - to turn off compression, set as false, to turn on, set as
+        // true
         gitproj.setCompression(true);
 
         // Create and fills files for practicing with sha1 later
@@ -125,11 +124,12 @@ public class CopyFileTester {
         // Makes sure Sha1 blob is created properly from random file
         System.out.println(gitproj.genSha1(f));
 
-        // Takes 3 files, turns into sha1 blobs, stores in index and creates files in objects with the sha1 hash as their names
+        // Takes 3 files, turns into sha1 blobs, stores in index and creates files in
+        // objects with the sha1 hash as their names
         gitproj.storeFileObj(f);
         gitproj.storeFileObj(g);
         gitproj.storeFileObj(h);
-        
+
         gitproj.storeFileInd(f);
         gitproj.storeFileInd(g);
         gitproj.storeFileInd(h);
@@ -139,11 +139,11 @@ public class CopyFileTester {
         System.out.println(isBlobInObjects(g));
         System.out.println(isBlobInObjects(h));
 
-        File i = new File(f + ".zip"); 
+        File i = new File(f + ".zip");
         if (!i.exists()) {
             i.createNewFile();
         }
-        File j = new File(g + ".zip"); 
+        File j = new File(g + ".zip");
         if (!j.exists()) {
             j.createNewFile();
         }
@@ -155,8 +155,9 @@ public class CopyFileTester {
         j.delete();
         k.delete();
 
-        // Reseting (Stretch Goal 2.3.1--> 2.4.2) (Comment out for testing the above, then uncomment and run before testing again)
-        //cleanUp();
+        // Reseting (Stretch Goal 2.3.1--> 2.4.2) (Comment out for testing the above,
+        // then uncomment and run before testing again)
+        // cleanUp();
 
     }
 }

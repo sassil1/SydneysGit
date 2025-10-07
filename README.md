@@ -1,3 +1,42 @@
+# ME WHEN I CODE BY MYSELF:
+> ## a=b+c;
+
+# ME WHEN I CODE WITH SOMEONE WATCHING
+> // Adding two variables together results in one bigger variable. <br/>
+> // I am choosing to call this one 'A' and it is the result of adding 'B' and 'C'! <br/>
+> 
+> int a = 0; // initializing it here, will make it the sum later <br/>
+> int b = 5; // will add this, and the next thing too <br/>
+> int c = 5; // I already described what this is, read that comment please <br/>
+
+> // using the sum method, this is more readable and better <br/>
+> int tempA = sum(c, b); <br/>
+
+> if (a != tempA) // we want to make sure we don't do any unecessary operations, for big O of course. <br/>
+>     a = tempA; <br/>
+
+> /// @Summary <br/>
+> /// This method adds two variables, one called 'C' and one called 'B'. <br/>
+>/// @Return: int <br/>
+> public static int sum(int C, int B) <br/>
+> { <br/>
+>     return C + B; <br/>
+> }<br/>
+
+
+# ===============================================
+# Joe'sUpdate
+I made a few changes. So read this first, and if it doesn't make sense in comparison to someone else's stuff then ignore her stuff. I am too tired to read through all of it to figure out what I changed.
+
+Basically, I changed 2 things -- the way that Sydney's code is used, and implemented a maketree thingy like we were supposed to.
+
+Before, Sydney's code required individual method calls for each file in order to make a blob and to index it. Now I just have one method that runs and does all this automatically (unless you add the file into the gitignore).
+
+I also implemented the maketree method:
+Please read the comments.
+
+This can all be explained and tested in my helpful Tester.java.
+
 # SydneysGit
 In the Copy File class, the compression instance variable decides if the code will all run with or without zip compression (true - will compress, false = won't compress). Use the setCompression method in the tester (already called in the main method) to swtich between compression/no compression
 
